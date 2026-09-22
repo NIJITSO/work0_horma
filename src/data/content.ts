@@ -456,12 +456,11 @@ export const RITUALS: Ritual[] = [
 ];
 
 export const GALLERY_IMAGES = [
-  { src: '/images/za-instagram-argan.png', altAr: 'زيت الأركان النقي', altFr: "Huile d'Argan pure" },
-  { src: '/images/za-instagram-rose.png', altAr: 'ماء ورد قلعة مكونة', altFr: 'Eau de rose pure' },
-  { src: '/images/za-instagram-nila.png', altAr: 'نيلة زرقاء مغربية', altFr: 'Nila bleue authentique' },
-  { src: '/images/za-instagram-serum.png', altAr: 'سيرومات العناية المركزة', altFr: 'Sérums botaniques précieux' },
-  { src: '/images/za-instagram-savon.png', altAr: 'صابون بلدي تقليدي', altFr: 'Savon noir traditionnel' },
-  { src: '/images/za-instagram-creme.png', altAr: 'كريم الوجه المخملي', altFr: 'Crème riche veloutée' },
+  { src: '/images/socialMedia/alhurra-insta-1.png', altAr: 'مجموعة الصابون الطبيعي الأصيل - الحرة', altFr: 'Trio de savons naturels précieux - AL HURRA' },
+  { src: '/images/socialMedia/alhurra-insta-2.png', altAr: 'صابون بلدي فاخر بمكونات طبيعية - الحرة', altFr: 'Savons artisanaux aux extraits botaniques - AL HURRA' },
+  { src: '/images/socialMedia/alhurra-insta-3.png', altAr: 'مقشر الجسم بالعكر الفاسي والنيلة الزرقاء - الحرة', altFr: 'Gommages corps Aker Fassi et Nila - AL HURRA' },
+  { src: '/images/socialMedia/alhurra-insta-4.png', altAr: 'مقشر الجسم الفاخر بالعكر الفاسي - الحرة', altFr: "Gommage somptueux à l'Aker Fassi - AL HURRA" },
+  { src: '/images/socialMedia/alhurra-insta-5.png', altAr: 'مقشر الجسم بالنيلة الزرقاء الملكية - الحرة', altFr: 'Gommage royal à la Nila - AL HURRA' },
 ];
 
 export const TESTIMONIALS: Testimonial[] = [

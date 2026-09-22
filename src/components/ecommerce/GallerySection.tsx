@@ -23,6 +23,8 @@ function InstagramIcon({ className = 'w-5 h-5' }: { className?: string }) {
   );
 }
 
+const INSTAGRAM_URL = 'https://www.instagram.com/alhurra_officiel?stkn=ZDNlZDc0MzIxNw==';
+
 export function GallerySection() {
   const { t } = useLanguage();
 
@@ -30,32 +32,42 @@ export function GallerySection() {
     <section className="py-12 bg-[#FFFCF7] border-b border-[#2D3533]/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-[#C89748] uppercase tracking-widest mb-1">
-            <InstagramIcon className="w-4 h-4" />
-            <span>@AL_HURRA</span>
-          </div>
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-xs font-bold text-[#C89748] hover:text-[#B68536] uppercase tracking-widest mb-1 transition-colors group cursor-pointer"
+          >
+            <InstagramIcon className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            <span>@alhurra_officiel</span>
+          </a>
           <h2 className="text-2xl sm:text-3xl font-serif-luxury font-bold text-[#123D35] italic">
             {t('لحظات جمال أصيلة من عالمنا', 'L’univers AL HURRA en images')}
           </h2>
         </div>
 
-        {/* 6 Grid items */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        {/* 5 Grid items */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {GALLERY_IMAGES.map((img, idx) => (
-            <div
+            <a
               key={idx}
-              className="group relative aspect-square overflow-hidden rounded-xl bg-[#F8F4EC] shadow-sm hover:shadow-lg transition-all duration-300"
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative aspect-square overflow-hidden rounded-xl bg-[#F8F4EC] shadow-sm hover:shadow-lg transition-all duration-300 block"
+              aria-label={t(img.altAr, img.altFr)}
             >
               <Image
                 src={img.src}
                 alt={t(img.altAr, img.altFr)}
                 fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                 className="object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-[#123D35]/0 group-hover:bg-[#123D35]/40 transition-colors duration-300 flex items-center justify-center">
                 <InstagramIcon className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
