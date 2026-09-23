@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatPrice } from '../../utils/format';
 import { useCart } from '../../context/CartContext';
@@ -32,24 +33,62 @@ export function CheckoutModal() {
   const shippingFeeMAD = 0;
   const totalMAD = subtotalMAD;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const generatedId = `AH-${Math.floor(10000 + Math.random() * 90000)}`;
-    setOrderId(generatedId);
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName,
+          phone,
+          city,
+          address,
+          paymentMethod,
+          notes,
+          items,
+          subtotalMAD,
+          shippingMAD: shippingFeeMAD,
+          totalMAD,
+        }),
+      });
 
-    setTimeout(() => {
+      const data = await response.json();
+      if (data.success && data.order?.id) {
+        setOrderId(data.order.id);
+      } else {
+        const fallbackId = `AH-${Math.floor(10000 + Math.random() * 90000)}`;
+        setOrderId(fallbackId);
+      }
+    } catch (err) {
+      console.error('Order submission error:', err);
+      const fallbackId = `AH-${Math.floor(10000 + Math.random() * 90000)}`;
+      setOrderId(fallbackId);
+    } finally {
       setIsSubmitting(false);
       setOrderConfirmed(true);
       clearCart();
-    }, 1200);
+    }
   };
 
   const whatsappMessage = encodeURIComponent(
-    language === 'ar'
-      ? `مرحباً الحرة! أود تأكيد طلبيتي رقم ${orderId}.\nالاسم: ${fullName}\nالهاتف: ${phone}\nالمدينة: ${city}\nالمجموع: ${totalMAD} درهم`
-      : `Bonjour AL HURRA ! Je souhaite confirmer ma commande ${orderId}.\nNom : ${fullName}\nTéléphone : ${phone}\nVille : ${city}\nTotal : ${totalMAD} DH`
+    (() => {
+      const itemsList = items
+        .map((i) => {
+          const scentName = i.selectedVariant?.scent
+            ? ` (${language === 'ar' ? (i.selectedVariant.scent.nameAr || i.selectedVariant.scent.name) : i.selectedVariant.scent.name})`
+            : '';
+          const sizeName = i.selectedVariant?.size ? ` - ${i.selectedVariant.size.value}` : '';
+          return `- ${language === 'ar' ? i.product.nameAr : i.product.nameFr}${scentName}${sizeName} x${i.quantity}`;
+        })
+        .join('\n');
+
+      return language === 'ar'
+        ? `مرحباً الحرة! أود تأكيد طلبيتي رقم ${orderId}.\n\nالاسم: ${fullName}\nالهاتف: ${phone}\nالمدينة: ${city}\nالعنوان: ${address}\n\nالمنتجات:\n${itemsList}\n\nالمجموع: ${totalMAD} درهم`
+        : `Bonjour AL HURRA ! Je souhaite confirmer ma commande ${orderId}.\n\nNom : ${fullName}\nTéléphone : ${phone}\nVille : ${city}\nAdresse : ${address}\n\nProduits :\n${itemsList}\n\nTotal : ${totalMAD} DH`;
+    })()
   );
 
   return (
@@ -259,6 +298,50 @@ export function CheckoutModal() {
                     </div>
                   </div>
                 </label>
+              </div>
+            </div>
+
+            {/* Ordered Items Preview */}
+            <div className="bg-[#F8F4EC]/60 p-3.5 rounded-xl border border-[#2D3533]/10 space-y-2">
+              <div className="text-xs font-semibold text-[#123D35] flex items-center justify-between">
+                <span>{t('المنتجات المطلوبة:', 'Articles commandés :')}</span>
+                <span className="text-[11px] text-[#64746E]">
+                  ({items.length} {t('عناصر', 'produits')})
+                </span>
+              </div>
+              <div className="max-h-36 overflow-y-auto space-y-2 pe-1">
+                {items.map((item, idx) => {
+                  const varPrice = item.selectedVariant ? item.selectedVariant.price : item.product.priceMAD;
+                  const itemImg = item.selectedVariant?.image || item.product.image;
+                  return (
+                    <div key={idx} className="flex items-center gap-2.5 text-xs">
+                      <div className="relative w-10 h-10 rounded-md overflow-hidden bg-white border border-[#2D3533]/10 shrink-0">
+                        <Image src={itemImg} alt={item.product.nameFr} fill className="object-cover" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-[#123D35] truncate">
+                          {t(item.product.nameAr, item.product.nameFr)}
+                        </div>
+                        <div className="text-[10px] text-[#64746E] flex items-center gap-1 flex-wrap">
+                          {item.selectedVariant?.scent && (
+                            <span className="bg-[#123D35]/10 text-[#123D35] px-1 rounded font-medium">
+                              {t(item.selectedVariant.scent.nameAr || item.selectedVariant.scent.name, item.selectedVariant.scent.name)}
+                            </span>
+                          )}
+                          <span>
+                            {item.selectedVariant?.size
+                              ? (language === 'ar' ? item.selectedVariant.size.nameAr || item.selectedVariant.size.value : item.selectedVariant.size.value)
+                              : item.product.volume}
+                          </span>
+                          <span>• x{item.quantity}</span>
+                        </div>
+                      </div>
+                      <span className="font-bold text-[#123D35] text-xs shrink-0">
+                        {formatPrice(varPrice * item.quantity)}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 

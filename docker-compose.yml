@@ -1,0 +1,30 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: alhurra-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: alhurra_db
+      MYSQL_USER: alhurra
+      MYSQL_PASSWORD: alhurra_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: alhurra-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8085:80"
+    environment:
+      PMA_HOST: alhurra-mysql
+      PMA_USER: alhurra
+      PMA_PASSWORD: alhurra_password
+    links:
+      - mysql
+
+volumes:
+  mysql_data:

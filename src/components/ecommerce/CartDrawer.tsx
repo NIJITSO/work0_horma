@@ -114,73 +114,86 @@ export function CartDrawer() {
                 </button>
               </div>
             ) : (
-              items.map((item) => (
-                <div
-                  key={item.product.id}
-                  className="flex gap-3 pb-4 border-b border-[#2D3533]/10 last:border-b-0"
-                >
-                  {/* Thumbnail */}
-                  <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-[#F8F4EC] border border-[#2D3533]/10 shrink-0">
-                    <Image
-                      src={item.product.image}
-                      alt={item.product.nameFr}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  {/* Details */}
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div className="flex justify-between items-start gap-2">
-                      <div>
-                        <h4 className="font-bold text-sm text-[#123D35] line-clamp-1">
-                          {t(item.product.nameAr, item.product.nameFr)}
-                        </h4>
-                        <span className="text-[11px] text-[#64746E]">
-                          {item.product.volume}
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => removeItem(item.product.id)}
-                        className="text-[#64746E] hover:text-red-600 transition-colors p-1"
-                        aria-label="Supprimer"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+              items.map((item, idx) => {
+                const variantPrice = item.selectedVariant ? item.selectedVariant.price : item.product.priceMAD;
+                const itemKey = item.selectedVariant ? `${item.product.id}-${item.selectedVariant.id}` : `${item.product.id}-${idx}`;
+                return (
+                  <div
+                    key={itemKey}
+                    className="flex gap-3 pb-4 border-b border-[#2D3533]/10 last:border-b-0"
+                  >
+                    {/* Thumbnail */}
+                    <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-[#F8F4EC] border border-[#2D3533]/10 shrink-0">
+                      <Image
+                        src={item.selectedVariant?.image || item.product.image}
+                        alt={item.product.nameFr}
+                        fill
+                        className="object-cover"
+                      />
                     </div>
 
-                    <div className="flex items-center justify-between mt-2">
-                      {/* Quantity Controller */}
-                      <div className="flex items-center border border-[#2D3533]/20 rounded-md overflow-hidden">
+                    {/* Details */}
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div className="flex justify-between items-start gap-2">
+                        <div>
+                          <h4 className="font-bold text-sm text-[#123D35] line-clamp-1">
+                            {t(item.product.nameAr, item.product.nameFr)}
+                          </h4>
+                          <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                            <span className="text-[11px] text-[#64746E]">
+                              {item.selectedVariant?.size
+                                ? (isRtl ? item.selectedVariant.size.nameAr || item.selectedVariant.size.value : item.selectedVariant.size.value)
+                                : item.product.volume}
+                            </span>
+                            {item.selectedVariant?.scent && (
+                              <span className="text-[10px] bg-[#123D35]/10 text-[#123D35] px-1.5 py-0.5 rounded font-medium">
+                                {t(item.selectedVariant.scent.nameAr || item.selectedVariant.scent.name, item.selectedVariant.scent.name)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
                         <button
-                          onClick={() =>
-                            updateQuantity(item.product.id, item.quantity - 1)
-                          }
-                          className="px-2 py-1 hover:bg-[#2D3533]/5 text-[#2D3533] transition-colors"
+                          onClick={() => removeItem(item.product.id, item.selectedVariant?.id)}
+                          className="text-[#64746E] hover:text-red-600 transition-colors p-1"
+                          aria-label="Supprimer"
                         >
-                          <Minus className="w-3 h-3" />
-                        </button>
-                        <span className="px-2 text-xs font-semibold text-[#123D35]">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() =>
-                            updateQuantity(item.product.id, item.quantity + 1)
-                          }
-                          className="px-2 py-1 hover:bg-[#2D3533]/5 text-[#2D3533] transition-colors"
-                        >
-                          <Plus className="w-3 h-3" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
 
-                      {/* Price */}
-                      <span className="font-bold text-sm text-[#123D35]">
-                        {formatPrice(item.product.priceMAD * item.quantity)}
-                      </span>
+                      <div className="flex items-center justify-between mt-2">
+                        {/* Quantity Controller */}
+                        <div className="flex items-center border border-[#2D3533]/20 rounded-md overflow-hidden">
+                          <button
+                            onClick={() =>
+                              updateQuantity(item.product.id, item.quantity - 1, item.selectedVariant?.id)
+                            }
+                            className="px-2 py-1 hover:bg-[#2D3533]/5 text-[#2D3533] transition-colors"
+                          >
+                            <Minus className="w-3 h-3" />
+                          </button>
+                          <span className="px-2 text-xs font-semibold text-[#123D35]">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() =>
+                              updateQuantity(item.product.id, item.quantity + 1, item.selectedVariant?.id)
+                            }
+                            className="px-2 py-1 hover:bg-[#2D3533]/5 text-[#2D3533] transition-colors"
+                          >
+                            <Plus className="w-3 h-3" />
+                          </button>
+                        </div>
+
+                        {/* Price */}
+                        <span className="font-bold text-sm text-[#123D35]">
+                          {formatPrice(variantPrice * item.quantity)}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
 

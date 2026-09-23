@@ -1,18 +1,18 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { CartItem, Product } from '../types';
+import { CartItem, Product, ProductVariant } from '../types';
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Product, quantity?: number) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addItem: (product: Product, quantity?: number, selectedVariant?: ProductVariant) => void;
+  removeItem: (productId: string, variantId?: number) => void;
+  updateQuantity: (productId: string, quantity: number, variantId?: number) => void;
   clearCart: () => void;
   totalItems: number;
   subtotalMAD: number;
   freeShippingThresholdMAD: number;
-  freeShippingProgress: number; // 0 to 100
+  freeShippingProgress: number;
   isFreeShipping: boolean;
   isCartOpen: boolean;
   openCart: () => void;
@@ -22,7 +22,8 @@ interface CartContextType {
   openCheckout: () => void;
   closeCheckout: () => void;
   quickViewProduct: Product | null;
-  openQuickView: (product: Product) => void;
+  quickViewInitialVariantId: number | null;
+  openQuickView: (product: Product, variantId?: number) => void;
   closeQuickView: () => void;
   isSearchOpen: boolean;
   openSearch: () => void;
@@ -36,6 +37,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  const [quickViewInitialVariantId, setQuickViewInitialVariantId] = useState<number | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Load cart from localStorage
@@ -59,34 +61,53 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items]);
 
-  const addItem = (product: Product, quantity: number = 1) => {
+  const addItem = (product: Product, quantity: number = 1, selectedVariant?: ProductVariant) => {
+    const activeVariant = selectedVariant || product.variants?.[0];
     setItems((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
+      const existingIndex = prev.findIndex(
+        (item) =>
+          item.product.id === product.id &&
+          (activeVariant ? item.selectedVariant?.id === activeVariant.id : !item.selectedVariant)
+      );
+
+      if (existingIndex > -1) {
+        const updated = [...prev];
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + quantity,
+        };
+        return updated;
       }
-      return [...prev, { product, quantity }];
+
+      return [...prev, { product, quantity, selectedVariant: activeVariant }];
     });
     setIsCartOpen(true);
   };
 
-  const removeItem = (productId: string) => {
-    setItems((prev) => prev.filter((item) => item.product.id !== productId));
+  const removeItem = (productId: string, variantId?: number) => {
+    setItems((prev) =>
+      prev.filter(
+        (item) =>
+          !(
+            item.product.id === productId &&
+            (variantId ? item.selectedVariant?.id === variantId : true)
+          )
+      )
+    );
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = (productId: string, quantity: number, variantId?: number) => {
     if (quantity <= 0) {
-      removeItem(productId);
+      removeItem(productId, variantId);
       return;
     }
     setItems((prev) =>
-      prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
-      )
+      prev.map((item) => {
+        const matches =
+          item.product.id === productId &&
+          (variantId ? item.selectedVariant?.id === variantId : true);
+        return matches ? { ...item, quantity } : item;
+      })
     );
   };
 
@@ -95,10 +116,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotalMAD = items.reduce(
-    (acc, item) => acc + item.product.priceMAD * item.quantity,
-    0
-  );
+  const subtotalMAD = items.reduce((acc, item) => {
+    const unitPrice = item.selectedVariant ? item.selectedVariant.price : item.product.priceMAD;
+    return acc + unitPrice * item.quantity;
+  }, 0);
 
   const freeShippingProgress = 100;
   const isFreeShipping = true;
@@ -113,8 +134,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
   const closeCheckout = () => setIsCheckoutOpen(false);
 
-  const openQuickView = (product: Product) => setQuickViewProduct(product);
-  const closeQuickView = () => setQuickViewProduct(null);
+  const openQuickView = (product: Product, variantId?: number) => {
+    setQuickViewProduct(product);
+    setQuickViewInitialVariantId(variantId ?? null);
+  };
+  const closeQuickView = () => {
+    setQuickViewProduct(null);
+    setQuickViewInitialVariantId(null);
+  };
 
   const openSearch = () => setIsSearchOpen(true);
   const closeSearch = () => setIsSearchOpen(false);
@@ -140,6 +167,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         openCheckout,
         closeCheckout,
         quickViewProduct,
+        quickViewInitialVariantId,
         openQuickView,
         closeQuickView,
         isSearchOpen,

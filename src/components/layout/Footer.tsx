@@ -92,22 +92,28 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs text-[#FFFCF7]/80 font-light">
               <li>
-                <a href="#bestsellers" className="hover:text-[#C89748] transition-colors">
+                <Link href="/boutique" className="text-[#C89748] font-medium hover:underline transition-colors flex items-center gap-1">
+                  <span>{t('تصفح المتجر بالكامل', 'Toute la Boutique')}</span>
+                  <span className="rtl:rotate-180">→</span>
+                </Link>
+              </li>
+              <li>
+                <a href="/#bestsellers" className="hover:text-[#C89748] transition-colors">
                   {t('الأكثر مبيعاً', 'Meilleures ventes')}
                 </a>
               </li>
               <li>
-                <a href="#categories" className="hover:text-[#C89748] transition-colors">
+                <a href="/#categories" className="hover:text-[#C89748] transition-colors">
                   {t('عناية بالوجه والأركان', 'Soins Argan & Nila')}
                 </a>
               </li>
               <li>
-                <a href="#categories" className="hover:text-[#C89748] transition-colors">
+                <a href="/#categories" className="hover:text-[#C89748] transition-colors">
                   {t('الحمام المغربي والصابون', 'Rituels de Hammam')}
                 </a>
               </li>
               <li>
-                <a href="#rituals" className="hover:text-[#C89748] transition-colors">
+                <a href="/#rituals" className="hover:text-[#C89748] transition-colors">
                   {t('صناديق الهدايا الفاخرة', 'Coffrets Cadeaux')}
                 </a>
               </li>

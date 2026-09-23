@@ -2,19 +2,21 @@
 
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
-import { PRODUCTS } from '../../data/content';
+import { Product } from '../../types';
 import { ProductCard } from './ProductCard';
 
 export function BestsellersSection({
+  products = [],
   selectedCategory,
 }: {
+  products?: Product[];
   selectedCategory?: string;
 }) {
   const { t, isRtl } = useLanguage();
 
   const filteredProducts = selectedCategory
-    ? PRODUCTS.filter((p) => p.category === selectedCategory || selectedCategory === 'all')
-    : PRODUCTS;
+    ? products.filter((p) => p.category === selectedCategory || selectedCategory === 'all')
+    : products;
 
   return (
     <section id="bestsellers" className="py-12 sm:py-16 bg-[#F8F4EC]/60 border-y border-[#2D3533]/10">

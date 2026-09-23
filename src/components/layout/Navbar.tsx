@@ -35,10 +35,11 @@ export function Navbar() {
   }, [isMobileMenuOpen]);
 
   const navLinks = [
-    { href: '#categories', labelAr: 'العناية بالوجه', labelFr: 'Soins visage' },
-    { href: '#categories', labelAr: 'العناية بالجسم', labelFr: 'Soins corps' },
-    { href: '#rituals', labelAr: 'طقوس الجمال', labelFr: 'Rituels' },
-    { href: '#contact', labelAr: 'تواصل معنا', labelFr: 'Contactez-nous' },
+    { href: '/boutique', labelAr: 'المتجر', labelFr: 'La Boutique', isBoutique: true },
+    { href: '/#categories', labelAr: 'العناية بالوجه', labelFr: 'Soins visage' },
+    { href: '/#categories', labelAr: 'العناية بالجسم', labelFr: 'Soins corps' },
+    { href: '/#rituals', labelAr: 'طقوس الجمال', labelFr: 'Rituels' },
+    { href: '/#contact', labelAr: 'تواصل معنا', labelFr: 'Contactez-nous' },
   ];
 
   return (
@@ -139,13 +140,17 @@ export function Navbar() {
             {/* Desktop Navigation Links */}
             <nav className="flex items-center gap-6 xl:gap-8 text-[13px] font-medium tracking-wide uppercase">
               {navLinks.map((link, idx) => (
-                <a
+                <Link
                   key={idx}
                   href={link.href}
-                  className="text-[#2D3533]/90 hover:text-[#123D35] hover:border-b-2 hover:border-[#123D35] pb-1 transition-all"
+                  className={
+                    link.isBoutique
+                      ? 'px-3.5 py-1 rounded-full bg-[#123D35] text-[#FFFCF7] hover:bg-[#1A534A] transition-all font-semibold shadow-sm text-xs tracking-wider'
+                      : 'text-[#2D3533]/90 hover:text-[#123D35] hover:border-b-2 hover:border-[#123D35] pb-1 transition-all'
+                  }
                 >
                   {t(link.labelAr, link.labelFr)}
-                </a>
+                </Link>
               ))}
             </nav>
 
@@ -191,14 +196,18 @@ export function Navbar() {
           <div className="lg:hidden w-full bg-[#F8F4EC] border-t border-[#2D3533]/10 shadow-md animate-menu-open">
             <nav className="flex flex-col w-full">
               {navLinks.map((link, idx) => (
-                <a
+                <Link
                   key={idx}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full block px-5 py-4 text-start text-[#2D3533] hover:text-[#123D35] hover:bg-[#F2ECE1]/60 font-medium text-[15px] sm:text-base tracking-wide border-b border-[#2D3533]/10 transition-colors"
+                  className={`w-full block px-5 py-4 text-start font-medium text-[15px] sm:text-base tracking-wide border-b border-[#2D3533]/10 transition-colors ${
+                    link.isBoutique
+                      ? 'text-[#123D35] font-bold bg-[#123D35]/5'
+                      : 'text-[#2D3533] hover:text-[#123D35] hover:bg-[#F2ECE1]/60'
+                  }`}
                 >
                   {t(link.labelAr, link.labelFr)}
-                </a>
+                </Link>
               ))}
               <div className="p-4 bg-[#F2ECE1]/40">
                 <a

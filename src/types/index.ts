@@ -14,6 +14,36 @@ export interface Category {
   nameFr: string;
   image: string;
   slug: string;
+  description?: string;
+}
+
+export interface Scent {
+  id: number;
+  name: string;
+  nameAr?: string;
+  slug: string;
+  image?: string;
+}
+
+export interface Size {
+  id: number;
+  name: string;
+  nameAr?: string;
+  value: string;
+}
+
+export interface ProductVariant {
+  id: number;
+  productId: number;
+  scentId?: number | null;
+  scent?: Scent | null;
+  sizeId?: number | null;
+  size?: Size | null;
+  sku: string;
+  price: number;
+  stock: number;
+  image?: string | null;
+  isActive: boolean;
 }
 
 export interface Product {
@@ -40,6 +70,7 @@ export interface Product {
   usageAr: string;
   usageFr: string;
   inStock: boolean;
+  variants?: ProductVariant[];
 }
 
 export interface Ritual {
@@ -84,4 +115,5 @@ export interface FaqItem {
 export interface CartItem {
   product: Product;
   quantity: number;
+  selectedVariant?: ProductVariant;
 }

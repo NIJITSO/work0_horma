@@ -5,10 +5,10 @@ import Image from 'next/image';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatPrice } from '../../utils/format';
 import { useCart } from '../../context/CartContext';
-import { PRODUCTS } from '../../data/content';
+import { Product } from '../../types';
 import { Search, X, ArrowRight, ArrowLeft } from 'lucide-react';
 
-export function SearchModal() {
+export function SearchModal({ products = [] }: { products?: Product[] }) {
   const { t, isRtl } = useLanguage();
   const { isSearchOpen, closeSearch, openQuickView } = useCart();
   const [query, setQuery] = useState('');
@@ -16,7 +16,7 @@ export function SearchModal() {
   const filtered = useMemo(() => {
     if (!query.trim()) return [];
     const q = query.toLowerCase();
-    return PRODUCTS.filter(
+    return products.filter(
       (p) =>
         p.nameAr.toLowerCase().includes(q) ||
         p.nameFr.toLowerCase().includes(q) ||
@@ -25,7 +25,7 @@ export function SearchModal() {
         p.ingredientsAr.toLowerCase().includes(q) ||
         p.ingredientsFr.toLowerCase().includes(q)
     );
-  }, [query]);
+  }, [query, products]);
 
   if (!isSearchOpen) return null;
 

@@ -2,14 +2,17 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useLanguage } from '../../context/LanguageContext';
-import { CATEGORIES } from '../../data/content';
 import { DecorativeDivider } from '../ui/DecorativeDivider';
+import { Category } from '../../types';
 
 export function CategoriesSection({
+  categories = [],
   activeCategory,
   onSelectCategory,
 }: {
+  categories?: Category[];
   activeCategory?: string;
   onSelectCategory?: (slug: string) => void;
 }) {
@@ -28,7 +31,7 @@ export function CategoriesSection({
 
         {/* Categories Circular Grid */}
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 sm:gap-8 justify-items-center">
-          {CATEGORIES.map((cat) => {
+          {categories.map((cat) => {
             const isSelected = activeCategory === cat.slug;
             return (
               <button
@@ -67,6 +70,17 @@ export function CategoriesSection({
               </button>
             );
           })}
+        </div>
+
+        {/* Link to Full Boutique */}
+        <div className="mt-10 text-center">
+          <Link
+            href="/boutique"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#123D35] hover:text-[#C89748] tracking-wider uppercase transition-colors group"
+          >
+            <span>{t('تصفح جميع المنتجات والخيارات في المتجر', 'Voir tous les produits et déclinaisons')}</span>
+            <span className="group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">→</span>
+          </Link>
         </div>
       </div>
     </section>
