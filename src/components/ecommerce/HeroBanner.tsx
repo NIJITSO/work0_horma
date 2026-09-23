@@ -102,7 +102,6 @@ export function HeroBanner() {
               className="inline-flex items-center justify-center gap-2 bg-[#C89748] hover:bg-[#B88636] text-[#FFFCF7] font-bold text-xs tracking-wider uppercase px-5 sm:px-7 py-3 sm:py-3.5 rounded shadow-sm hover:shadow transition-all duration-300"
             >
               <span>{t('اكتشف منتجاتنا', 'DÉCOUVRIR NOS SOINS')}</span>
-              <span className="text-sm">{isRtl ? '←' : '→'}</span>
             </a>
 
             <a
