@@ -84,8 +84,12 @@ export function BoutiqueProductCard({ product }: BoutiqueProductCardProps) {
     }
   };
 
+  const [isAdded, setIsAdded] = useState(false);
+
   const handleAddToCart = () => {
     addItem(product, 1, activeVariant || undefined);
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 1500);
   };
 
   return (
@@ -188,37 +192,13 @@ export function BoutiqueProductCard({ product }: BoutiqueProductCardProps) {
             </div>
           )}
 
-          {/* Size / Volume selector */}
-          {availableSizes.length > 1 && (
-            <div onClick={(e) => e.stopPropagation()}>
-              <div className="text-[11px] font-semibold text-[#123D35] mb-1 flex items-center justify-between">
-                <span>{t('الحجم / الوزن:', 'Format :')}</span>
-                <span className="text-[#64746E] font-medium">
-                  {activeVariant?.size ? (isRtl ? activeVariant.size.nameAr || activeVariant.size.value : activeVariant.size.value) : product.volume}
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {availableSizes.map((sz) => {
-                  const isSelected = activeVariant?.size?.value === sz.value;
-                  return (
-                    <button
-                      key={sz.id}
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleSelectSize(sz.value);
-                      }}
-                      className={`text-[11px] px-2 py-0.5 rounded-md font-semibold transition-all border ${
-                        isSelected
-                          ? 'border-[#123D35] bg-[#123D35]/10 text-[#123D35]'
-                          : 'border-[#2D3533]/20 bg-transparent text-[#2D3533] hover:border-[#123D35]/50'
-                      }`}
-                    >
-                      {isRtl ? sz.nameAr || sz.value : sz.value}
-                    </button>
-                  );
-                })}
-              </div>
+          {/* Fixed Format / Size display */}
+          {(activeVariant?.size || product.volume) && (
+            <div className="flex items-center justify-between text-[11px] font-medium text-[#64746E]">
+              <span>{t('الحجم / السعة:', 'Format :')}</span>
+              <span className="font-semibold text-[#123D35] bg-[#F8F4EC] px-2 py-0.5 rounded-md border border-[#2D3533]/10">
+                {activeVariant?.size ? (isRtl ? activeVariant.size.nameAr || activeVariant.size.value : activeVariant.size.value) : product.volume}
+              </span>
             </div>
           )}
 
@@ -249,14 +229,27 @@ export function BoutiqueProductCard({ product }: BoutiqueProductCardProps) {
             handleAddToCart();
           }}
           disabled={currentStock <= 0}
-          className="w-full bg-[#123D35] hover:bg-[#1A5449] disabled:bg-gray-300 disabled:cursor-not-allowed text-[#FFFCF7] font-semibold text-xs sm:text-sm py-2.5 px-3 rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2"
+          className={`w-full font-semibold text-xs sm:text-sm py-2.5 px-3 rounded-xl shadow-xs transition-all duration-300 flex items-center justify-center gap-2 ${
+            isAdded
+              ? 'bg-[#1A5449] text-white'
+              : 'bg-[#123D35] hover:bg-[#1A5449] text-[#FFFCF7]'
+          } disabled:bg-gray-300 disabled:cursor-not-allowed`}
         >
-          <ShoppingBag className="w-4 h-4" />
-          <span>
-            {currentStock <= 0
-              ? t('نفذ من المخزون', 'Épuisé')
-              : t('أضف إلى السلة', 'Ajouter au panier')}
-          </span>
+          {isAdded ? (
+            <>
+              <Check className="w-4 h-4 text-[#C89748]" />
+              <span>{t('تمت الإضافة للسلة!', 'Ajouté au panier !')}</span>
+            </>
+          ) : (
+            <>
+              <ShoppingBag className="w-4 h-4" />
+              <span>
+                {currentStock <= 0
+                  ? t('نفذ من المخزون', 'Épuisé')
+                  : t('أضف إلى السلة', 'Ajouter au panier')}
+              </span>
+            </>
+          )}
         </button>
       </div>
     </div>

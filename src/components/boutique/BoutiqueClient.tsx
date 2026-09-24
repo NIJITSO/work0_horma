@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Category, Product, Scent, Size } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
 import { AnnouncementBar } from '../layout/AnnouncementBar';
@@ -29,12 +30,35 @@ import {
 interface BoutiqueClientProps {
   categories: Category[];
   products: Product[];
+  initialCategory?: string;
 }
 
-export function BoutiqueClient({ categories, products }: BoutiqueClientProps) {
+export function BoutiqueClient({ categories, products, initialCategory = 'all' }: BoutiqueClientProps) {
   const { language, t, isRtl } = useLanguage();
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const urlCategory = searchParams?.get('category') || initialCategory;
+  const [selectedCategory, setSelectedCategory] = useState<string>(urlCategory);
+
+  useEffect(() => {
+    const cat = searchParams?.get('category');
+    if (cat) {
+      setSelectedCategory(cat);
+    } else if (initialCategory && initialCategory !== 'all') {
+      setSelectedCategory(initialCategory);
+    }
+  }, [searchParams, initialCategory]);
+
+  const handleSelectCategory = (catSlug: string) => {
+    setSelectedCategory(catSlug);
+    if (catSlug === 'all') {
+      router.push('/boutique', { scroll: false });
+    } else {
+      router.push(`/boutique?category=${catSlug}`, { scroll: false });
+    }
+  };
+
   const [selectedScent, setSelectedScent] = useState<string>('all');
   const [selectedSize, setSelectedSize] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -72,8 +96,17 @@ export function BoutiqueClient({ categories, products }: BoutiqueClientProps) {
     return products
       .filter((p) => {
         // Category filter
-        if (selectedCategory !== 'all' && p.category !== selectedCategory) {
-          return false;
+        if (selectedCategory !== 'all') {
+          const matchDirect = p.category === selectedCategory;
+          const matchNila =
+            selectedCategory === 'nila' &&
+            (p.id.includes('nila') || p.variants?.some((v) => v.scent?.slug === 'nila'));
+          const matchFigue =
+            (selectedCategory === 'figue-de-barbarie' || selectedCategory === 'figue') &&
+            (p.id.includes('figue') || p.variants?.some((v) => v.scent?.slug === 'figue'));
+          if (!matchDirect && !matchNila && !matchFigue) {
+            return false;
+          }
         }
 
         // Scent filter
@@ -111,7 +144,7 @@ export function BoutiqueClient({ categories, products }: BoutiqueClientProps) {
   }, [products, selectedCategory, selectedScent, selectedSize, searchQuery, sortBy]);
 
   const handleResetFilters = () => {
-    setSelectedCategory('all');
+    handleSelectCategory('all');
     setSelectedScent('all');
     setSelectedSize('all');
     setSearchQuery('');
@@ -166,7 +199,7 @@ export function BoutiqueClient({ categories, products }: BoutiqueClientProps) {
             <div className="pt-4 flex flex-wrap justify-center gap-3 sm:gap-6 text-xs text-[#123D35]">
               <div className="flex items-center gap-1.5 bg-white/80 px-3 py-1.5 rounded-full border border-[#2D3533]/10 shadow-2xs">
                 <Truck className="w-3.5 h-3.5 text-[#C89748]" />
-                <span>{t('توصيل سريع مجاني لكافة المدن', 'Livraison express partout au Maroc')}</span>
+                <span>{t('توصيل مجاني ابتداءً من 200 درهم', 'Livraison gratuite dès 200 DH')}</span>
               </div>
               <div className="flex items-center gap-1.5 bg-white/80 px-3 py-1.5 rounded-full border border-[#2D3533]/10 shadow-2xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#C89748]" />
@@ -186,7 +219,7 @@ export function BoutiqueClient({ categories, products }: BoutiqueClientProps) {
             <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1">
               {/* All Category Pill */}
               <button
-                onClick={() => setSelectedCategory('all')}
+                onClick={() => handleSelectCategory('all')}
                 className={`text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap transition-all flex items-center gap-1.5 ${
                   selectedCategory === 'all'
                     ? 'bg-[#123D35] text-white shadow-xs'
@@ -206,12 +239,17 @@ export function BoutiqueClient({ categories, products }: BoutiqueClientProps) {
               {/* Individual Categories */}
               {categories.map((cat) => {
                 const isSelected = selectedCategory === cat.slug;
-                const count = products.filter((p) => p.category === cat.slug).length;
+                const count = products.filter((p) => {
+                  if (p.category === cat.slug) return true;
+                  if (cat.slug === 'nila' && (p.id.includes('nila') || p.variants?.some((v) => v.scent?.slug === 'nila'))) return true;
+                  if ((cat.slug === 'figue-de-barbarie' || cat.slug === 'figue') && (p.id.includes('figue') || p.variants?.some((v) => v.scent?.slug === 'figue'))) return true;
+                  return false;
+                }).length;
 
                 return (
                   <button
                     key={cat.id}
-                    onClick={() => setSelectedCategory(cat.slug)}
+                    onClick={() => handleSelectCategory(cat.slug)}
                     className={`text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap transition-all flex items-center gap-1.5 ${
                       isSelected
                         ? 'bg-[#123D35] text-white shadow-xs'
@@ -279,23 +317,6 @@ export function BoutiqueClient({ categories, products }: BoutiqueClientProps) {
                 </select>
               </div>
 
-              {/* Size Filter */}
-              <div className="flex-1 sm:flex-initial">
-                <select
-                  value={selectedSize}
-                  onChange={(e) => setSelectedSize(e.target.value)}
-                  className="w-full sm:w-auto bg-[#FFFCF7] border border-[#2D3533]/15 rounded-xl px-3 py-2.5 text-xs font-medium text-[#2D3533] focus:outline-none focus:ring-2 focus:ring-[#123D35]"
-                >
-                  <option value="all">
-                    {t('جميع الأحجام والأوزان', 'Tous les formats')}
-                  </option>
-                  {allSizes.map((sz) => (
-                    <option key={sz} value={sz}>
-                      {sz}
-                    </option>
-                  ))}
-                </select>
-              </div>
 
               {/* Sort Selector */}
               <div className="flex-1 sm:flex-initial">

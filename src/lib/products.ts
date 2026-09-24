@@ -17,6 +17,8 @@ const SCENT_ARABIC_NAMES: Record<string, string> = {
   'akar-fassi': 'العكر الفاسي',
   verveine: 'لويزة',
   lavande: 'خزامى',
+  hibiscus: 'أركان وكركديه',
+  'anti-fourches': 'أركان ضد التقصف',
 };
 
 export async function getDbProducts(categorySlug?: string): Promise<UiProduct[]> {

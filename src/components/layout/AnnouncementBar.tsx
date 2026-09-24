@@ -39,8 +39,8 @@ export function AnnouncementBar() {
           <Sparkles className="w-3.5 h-3.5 text-[#C89748] animate-pulse shrink-0" />
           <span>
             {t(
-              'توصيل مجاني لجميع مدن المغرب · الدفع عند الاستلام',
-              'LIVRAISON GRATUITE PARTOUT AU MAROC · PAIEMENT À LA LIVRAISON'
+              'توصيل مجاني ابتداءً من 200 درهم · الدفع عند الاستلام',
+              'LIVRAISON GRATUITE DÈS 200 DH · PAIEMENT À LA LIVRAISON'
             )}
           </span>
         </div>

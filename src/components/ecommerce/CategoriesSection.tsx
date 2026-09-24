@@ -34,8 +34,9 @@ export function CategoriesSection({
           {categories.map((cat) => {
             const isSelected = activeCategory === cat.slug;
             return (
-              <button
+              <Link
                 key={cat.id}
+                href={`/boutique?category=${cat.slug}`}
                 onClick={() => onSelectCategory && onSelectCategory(cat.slug)}
                 className="group flex flex-col items-center cursor-pointer text-center focus:outline-none"
               >
@@ -52,6 +53,7 @@ export function CategoriesSection({
                       src={cat.image}
                       alt={cat.nameFr}
                       fill
+                      sizes="(max-width: 640px) 80px, 128px"
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
@@ -67,7 +69,7 @@ export function CategoriesSection({
                 >
                   {t(cat.nameAr, cat.nameFr)}
                 </span>
-              </button>
+              </Link>
             );
           })}
         </div>

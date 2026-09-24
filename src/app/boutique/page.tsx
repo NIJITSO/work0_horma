@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { getDbCategories } from '../../lib/categories';
 import { getDbProducts } from '../../lib/products';
 import { BoutiqueClient } from '../../components/boutique/BoutiqueClient';
@@ -11,11 +11,24 @@ export const metadata = {
     'Découvrez tous les cosmétiques naturels Al Hurra : huiles d’argan pures, crèmes, gommages et savons traditionnels avec toutes leurs variantes et senteurs.',
 };
 
-export default async function BoutiquePage() {
+export default async function BoutiquePage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ category?: string; scent?: string; q?: string }>;
+}) {
+  const resolvedParams = searchParams ? await searchParams : {};
   const [categories, products] = await Promise.all([
     getDbCategories(),
     getDbProducts(),
   ]);
 
-  return <BoutiqueClient categories={categories} products={products} />;
+  return (
+    <Suspense>
+      <BoutiqueClient
+        categories={categories}
+        products={products}
+        initialCategory={resolvedParams.category || 'all'}
+      />
+    </Suspense>
+  );
 }

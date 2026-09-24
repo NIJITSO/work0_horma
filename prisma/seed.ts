@@ -14,22 +14,46 @@ interface VariantSpec {
 
 const PRODUCT_VARIANTS_SPEC: Record<string, VariantSpec[]> = {
   'savon-noir': [
-    { sizeValue: '250 g', scentSlug: 'eucalyptus', priceMultiplier: 1.0 },
-    { sizeValue: '250 g', scentSlug: 'fleur-oranger', priceMultiplier: 1.0 },
-    { sizeValue: '500 g', scentSlug: 'eucalyptus', priceMultiplier: 1.72 },
+    {
+      sizeValue: '100 g',
+      scentSlug: 'naturel',
+      customPrice: 139,
+      image: '/images/productsVariants/1-naturel.jpeg',
+      sku: 'AH-SAVON_NATUREL-100G',
+    },
+    {
+      sizeValue: '100 g',
+      scentSlug: 'eucalyptus',
+      customPrice: 139,
+      image: '/images/productsVariants/1-eucalyptus.png',
+      sku: 'AH-SAVON_EUCALYPTUS-100G',
+    },
+    {
+      sizeValue: '100 g',
+      scentSlug: 'fleur-oranger',
+      customPrice: 139,
+      image: '/images/productsVariants/1-fleur-oranger.png',
+      sku: 'AH-SAVON_ORANGER-100G',
+    },
   ],
   'serum-argan-hibiscus': [
-    { sizeValue: '50 ml', scentSlug: 'naturel', priceMultiplier: 1.0 },
-    { sizeValue: '100 ml', scentSlug: 'naturel', priceMultiplier: 1.68 },
-  ],
-  'creme-visage': [
-    { sizeValue: '50 g', scentSlug: 'fleur-oranger', priceMultiplier: 1.0 },
-    { sizeValue: '50 g', scentSlug: 'rose', priceMultiplier: 1.0 },
-    { sizeValue: '100 g', scentSlug: 'fleur-oranger', priceMultiplier: 1.61 },
+    {
+      sizeValue: '50 ml',
+      scentSlug: 'hibiscus',
+      customPrice: 219,
+      image: '/images/productsVariants/2-hibiscus.jpeg',
+      sku: 'AH-SERUM_ARGAN_HIBISCUS-50ML',
+    },
+    {
+      sizeValue: '50 ml',
+      scentSlug: 'anti-fourches',
+      customPrice: 219,
+      image: '/images/productsVariants/2-anti-fourches.png',
+      sku: 'AH-SERUM_ARGAN_ANTIFOURCHES-50ML',
+    },
   ],
   'creme-hydratante-argan': [
-    { sizeValue: '50 g', scentSlug: 'naturel', priceMultiplier: 1.0 },
-    { sizeValue: '100 g', scentSlug: 'naturel', priceMultiplier: 1.63 },
+    { sizeValue: '50 g', scentSlug: 'naturel', customPrice: 239, sku: 'AH-CREME_HYDRATANTE_ARGAN' },
   ],
   'gommage-corps': [
     {
@@ -46,24 +70,9 @@ const PRODUCT_VARIANTS_SPEC: Record<string, VariantSpec[]> = {
       image: '/images/productsVariants/5-akar-fassi.jpeg',
       sku: 'AH-GOMMAGE_CORPS-AKAR_FASSI-200G',
     },
-    {
-      sizeValue: '500 g',
-      scentSlug: 'nila',
-      customPrice: 389,
-      image: '/images/productsVariants/5-nila.jpeg',
-      sku: 'AH-GOMMAGE_CORPS-NILA-500G',
-    },
-    {
-      sizeValue: '500 g',
-      scentSlug: 'akar-fassi',
-      customPrice: 349,
-      image: '/images/productsVariants/5-akar-fassi.jpeg',
-      sku: 'AH-GOMMAGE_CORPS-AKAR_FASSI-500G',
-    },
   ],
   'serum-argan': [
-    { sizeValue: '30 ml', scentSlug: 'naturel', priceMultiplier: 1.0 },
-    { sizeValue: '50 ml', scentSlug: 'naturel', priceMultiplier: 1.4 },
+    { sizeValue: '30 ml', scentSlug: 'naturel', customPrice: 249, sku: 'AH-SERUM_ARGAN' },
   ],
   // Product ID 8: Gel Douche Argan & Miel line with custom variant images (8-*.png/jpeg)
   'gel-douche-argan-miel': [
@@ -110,13 +119,61 @@ const PRODUCT_VARIANTS_SPEC: Record<string, VariantSpec[]> = {
       sku: 'AH-GEL_DOUCHE-EUCALYPTUS-100ML',
     },
   ],
-  'gommage-visage-nila': [
-    { sizeValue: '100 g', scentSlug: 'naturel', priceMultiplier: 1.0 },
-    { sizeValue: '250 g', scentSlug: 'naturel', priceMultiplier: 1.69 },
-  ],
+  // Product ID 10: Lait Corporel line with custom variant images (10-*.png/jpeg)
   'eau-rose': [
-    { sizeValue: '100 ml', scentSlug: 'rose', priceMultiplier: 1.0 },
-    { sizeValue: '250 ml', scentSlug: 'rose', priceMultiplier: 1.71 },
+    {
+      sizeValue: '100 ml',
+      scentSlug: 'rose',
+      customPrice: 169,
+      image: '/images/productsVariants/10-rose.jpeg',
+      sku: 'AH-LAIT_CORPOREL-ROSE-100ML',
+    },
+    {
+      sizeValue: '100 ml',
+      scentSlug: 'naturel',
+      customPrice: 169,
+      image: '/images/productsVariants/10-naturel.png',
+      sku: 'AH-LAIT_CORPOREL-NATUREL-100ML',
+    },
+    {
+      sizeValue: '100 ml',
+      scentSlug: 'gardenia',
+      customPrice: 169,
+      image: '/images/productsVariants/10-gardenia.png',
+      sku: 'AH-LAIT_CORPOREL-GARDENIA-100ML',
+    },
+    {
+      sizeValue: '100 ml',
+      scentSlug: 'miel',
+      customPrice: 169,
+      image: '/images/productsVariants/10-miel.png',
+      sku: 'AH-LAIT_CORPOREL-MIEL-100ML',
+    },
+    {
+      sizeValue: '100 ml',
+      scentSlug: 'fleur-oranger',
+      customPrice: 169,
+      image: '/images/productsVariants/10-fleur-oranger.png',
+      sku: 'AH-LAIT_CORPOREL-ORANGER-100ML',
+    },
+  ],
+  'baume-levres': [
+    {
+      sizeValue: '20 g',
+      scentSlug: 'argan',
+      customPrice: 89,
+      image: '/images/products/baume-levres.jpeg',
+      sku: 'AH-BAUME_LEVRES-ARGAN-20G',
+    },
+  ],
+  'gommage-visage-nila': [
+    {
+      sizeValue: '100 g',
+      scentSlug: 'naturel',
+      customPrice: 189,
+      image: '/images/products/gommage-visage-nila.jpeg',
+      sku: 'AH-GOMMAGE_VISAGE_NILA-100G',
+    },
   ],
 };
 
@@ -128,7 +185,7 @@ async function main() {
   await prisma.order.deleteMany({});
   await prisma.productVariant.deleteMany({});
   await prisma.productImage.deleteMany({});
-  await prisma.product.deleteMany({ where: { slug: { in: ['huile-nila', 'gommage-argan'] } } });
+  await prisma.product.deleteMany({ where: { slug: { in: ['huile-nila', 'gommage-argan', 'creme-visage'] } } });
 
   // 1. Seed Sizes with Arabic and French values
   const sizeData = [
@@ -138,6 +195,7 @@ async function main() {
     { name: '200 ml', nameAr: '200 مل', value: '200 ml' },
     { name: '250 ml', nameAr: '250 مل', value: '250 ml' },
     { name: '500 ml', nameAr: '500 مل', value: '500 ml' },
+    { name: '20 g', nameAr: '20 غ', value: '20 g' },
     { name: '50 g', nameAr: '50 غ', value: '50 g' },
     { name: '100 g', nameAr: '100 غ', value: '100 g' },
     { name: '200 g', nameAr: '200 غ', value: '200 g' },
@@ -175,6 +233,8 @@ async function main() {
     { name: 'Akar Fassi', nameAr: 'العكر الفاسي', slug: 'akar-fassi', image: '/images/scents/akar-fassi.png' },
     { name: 'Verveine', nameAr: 'لويزة', slug: 'verveine', image: '/images/scents/verveine.png' },
     { name: 'Lavande', nameAr: 'خزامى', slug: 'lavande', image: '/images/scents/lavande.png' },
+    { name: 'Argan & Hibiscus', nameAr: 'أركان وكركديه', slug: 'hibiscus', image: '/images/scents/hibiscus.png' },
+    { name: 'Argan Anti-fourches', nameAr: 'أركان ضد التقصف', slug: 'anti-fourches', image: '/images/scents/argan.png' },
   ];
 
   const scentMap = new Map<string, number>();

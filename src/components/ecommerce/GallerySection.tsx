@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useLanguage } from '../../context/LanguageContext';
-import { GALLERY_IMAGES } from '../../data/content';
+import { GALLERY_IMAGES, BRAND } from '../../data/content';
 
 function InstagramIcon({ className = 'w-5 h-5' }: { className?: string }) {
   return (
@@ -23,7 +23,7 @@ function InstagramIcon({ className = 'w-5 h-5' }: { className?: string }) {
   );
 }
 
-const INSTAGRAM_URL = 'https://www.instagram.com/alhurra_officiel?stkn=ZDNlZDc0MzIxNw==';
+const INSTAGRAM_URL = BRAND.instagramUrl;
 
 export function GallerySection() {
   const { t } = useLanguage();

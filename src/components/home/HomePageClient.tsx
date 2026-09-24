@@ -7,7 +7,7 @@ import { Navbar } from '../layout/Navbar';
 import { HeroBanner } from '../ecommerce/HeroBanner';
 import { TrustBadges } from '../ecommerce/TrustBadges';
 import { CategoriesSection } from '../ecommerce/CategoriesSection';
-import { BestsellersSection } from '../ecommerce/BestsellersSection';
+import { InteractivePackSection } from '../ecommerce/InteractivePackSection';
 import { HeritageSection } from '../ecommerce/HeritageSection';
 import { SignatureRitualsSection } from '../ecommerce/SignatureRitualsSection';
 import { GallerySection } from '../ecommerce/GallerySection';
@@ -62,11 +62,8 @@ export function HomePageClient({
           onSelectCategory={handleSelectCategory}
         />
 
-        {/* 6. Bestsellers Products Catalog (Loaded from Database) */}
-        <BestsellersSection
-          products={initialProducts}
-          selectedCategory={selectedCategory}
-        />
+        {/* 6. Interactive 9-Product Showcase (packDynamic scene with hotspots) */}
+        <InteractivePackSection products={initialProducts} />
 
         {/* 7. Moroccan Heritage & Cooperative Story */}
         <HeritageSection />

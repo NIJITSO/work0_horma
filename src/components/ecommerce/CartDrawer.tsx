@@ -16,6 +16,10 @@ export function CartDrawer() {
     updateQuantity,
     removeItem,
     subtotalMAD,
+    shippingFeeMAD,
+    freeShippingThresholdMAD,
+    freeShippingProgress,
+    isFreeShipping,
     openCheckout,
   } = useCart();
 
@@ -39,8 +43,8 @@ export function CartDrawer() {
   };
 
   const discountMAD = (subtotalMAD * discountPercent) / 100;
-  const shippingFeeMAD = 0;
-  const totalMAD = subtotalMAD - discountMAD;
+  const totalMAD = Math.max(0, subtotalMAD - discountMAD + shippingFeeMAD);
+  const remainingForFreeShipping = Math.max(0, freeShippingThresholdMAD - subtotalMAD);
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
@@ -79,15 +83,38 @@ export function CartDrawer() {
 
           {/* Free Shipping Badge */}
           <div className="bg-[#123D35] text-[#FFFCF7] p-3 text-xs">
-            <div className="flex items-center justify-center gap-1.5 font-medium">
-              <Sparkles className="w-3.5 h-3.5 text-[#C89748]" />
-              <span>
-                {t(
-                  'توصيل مجاني لجميع مدن المغرب · الدفع عند الاستلام',
-                  'LIVRAISON GRATUITE PARTOUT AU MAROC · PAIEMENT À LA LIVRAISON'
-                )}
-              </span>
-            </div>
+            {isFreeShipping ? (
+              <div className="flex items-center justify-center gap-1.5 font-medium">
+                <Sparkles className="w-3.5 h-3.5 text-[#C89748]" />
+                <span>
+                  {t(
+                    'تهانينا! لقد حصلت على توصيل مجاني لطلبك 🎉',
+                    'Félicitations ! Vous bénéficiez de la livraison gratuite 🎉'
+                  )}
+                </span>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-between mb-1.5 font-medium">
+                  <span className="flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-[#C89748]" />
+                    <span>
+                      {t(
+                        `أضيفي ${formatPrice(remainingForFreeShipping)} للاستفادة من التوصيل المجاني`,
+                        `Plus que ${formatPrice(remainingForFreeShipping)} pour la livraison gratuite !`
+                      )}
+                    </span>
+                  </span>
+                  <span className="text-[11px] text-[#C89748] font-bold">{freeShippingProgress}%</span>
+                </div>
+                <div className="w-full bg-white/20 rounded-full h-1.5 overflow-hidden">
+                  <div
+                    className="bg-[#C89748] h-full transition-all duration-500 rounded-full"
+                    style={{ width: `${freeShippingProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Cart Item List */}
@@ -237,9 +264,15 @@ export function CartDrawer() {
                 )}
                 <div className="flex justify-between">
                   <span className="text-[#64746E]">{t('الشحن والتوصيل', 'Livraison')}</span>
-                  <span className="font-semibold text-green-700 font-bold">
-                    {t('مجاني', 'Gratuite')}
-                  </span>
+                  {isFreeShipping ? (
+                    <span className="font-semibold text-green-700 font-bold">
+                      {t('مجاني', 'Gratuite')}
+                    </span>
+                  ) : (
+                    <span className="font-semibold text-[#123D35]">
+                      {formatPrice(shippingFeeMAD)}
+                    </span>
+                  )}
                 </div>
                 <div className="pt-2 border-t border-[#2D3533]/10 flex justify-between text-sm sm:text-base font-bold text-[#123D35]">
                   <span>{t('المجموع الإجمالي', 'Total TTC')}</span>

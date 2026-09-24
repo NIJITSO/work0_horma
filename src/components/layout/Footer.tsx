@@ -65,7 +65,7 @@ export function Footer() {
 
             <div className="flex items-center gap-3 mt-2">
               <a
-                href="https://www.instagram.com/alhurra_officiel?stkn=ZDNlZDc0MzIxNw=="
+                href={BRAND.instagramUrl}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram"
@@ -74,7 +74,7 @@ export function Footer() {
                 <InstagramIcon className="w-4 h-4" />
               </a>
               <a
-                href="https://facebook.com"
+                href={BRAND.facebookUrl}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Facebook"
@@ -94,7 +94,6 @@ export function Footer() {
               <li>
                 <Link href="/boutique" className="text-[#C89748] font-medium hover:underline transition-colors flex items-center gap-1">
                   <span>{t('تصفح المتجر بالكامل', 'Toute la Boutique')}</span>
-                  <span className="rtl:rotate-180">→</span>
                 </Link>
               </li>
               <li>

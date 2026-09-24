@@ -268,36 +268,13 @@ export function QuickViewModal() {
                 </div>
               )}
 
-              {/* SIZE / FORMAT SELECTOR (If product has multiple sizes) */}
-              {availableSizes.length > 0 && (
-                <div className="mb-4 p-3 bg-white/70 rounded-xl border border-[#2D3533]/10">
-                  <div className="text-xs font-semibold text-[#123D35] mb-2 flex items-center justify-between">
-                    <span>{t('الحجم / السعة:', 'Format / Contenance :')}</span>
-                    {activeVariant?.size && (
-                      <span className="text-[#C89748] font-bold">
-                        {isRtl ? activeVariant.size.nameAr || activeVariant.size.value : activeVariant.size.value}
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {availableSizes.map((s) => {
-                      const isSelected = activeVariant?.size?.value === s.value;
-                      return (
-                        <button
-                          key={s.id}
-                          type="button"
-                          onClick={() => handleSelectSize(s.value)}
-                          className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-all ${
-                            isSelected
-                              ? 'bg-[#C89748] text-white border-[#C89748] shadow-xs scale-102 font-bold'
-                              : 'bg-white text-[#2D3533] border-[#2D3533]/20 hover:border-[#C89748]'
-                          }`}
-                        >
-                          {isRtl ? s.nameAr || s.value : s.value}
-                        </button>
-                      );
-                    })}
-                  </div>
+              {/* FIXED SIZE / FORMAT DISPLAY */}
+              {(activeVariant?.size || quickViewProduct.volume) && (
+                <div className="mb-4 p-3 bg-white/70 rounded-xl border border-[#2D3533]/10 flex items-center justify-between">
+                  <span className="text-xs font-semibold text-[#123D35]">{t('الحجم / السعة:', 'Format / Contenance :')}</span>
+                  <span className="text-xs font-bold text-[#123D35] bg-[#F8F4EC] px-2.5 py-1 rounded-lg border border-[#2D3533]/10">
+                    {activeVariant?.size ? (isRtl ? activeVariant.size.nameAr || activeVariant.size.value : activeVariant.size.value) : quickViewProduct.volume}
+                  </span>
                 </div>
               )}
 

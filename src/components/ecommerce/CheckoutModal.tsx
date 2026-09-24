@@ -15,6 +15,8 @@ export function CheckoutModal() {
     isCheckoutOpen,
     closeCheckout,
     subtotalMAD,
+    shippingFeeMAD,
+    isFreeShipping,
     clearCart,
   } = useCart();
 
@@ -30,8 +32,7 @@ export function CheckoutModal() {
 
   if (!isCheckoutOpen) return null;
 
-  const shippingFeeMAD = 0;
-  const totalMAD = subtotalMAD;
+  const totalMAD = subtotalMAD + shippingFeeMAD;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -353,9 +354,15 @@ export function CheckoutModal() {
               </div>
               <div className="flex justify-between font-medium text-[#64746E]">
                 <span>{t('مصاريف الشحن إلى', 'Frais d’expédition vers')} {city}</span>
-                <span className="text-green-700 font-bold">
-                  {t('مجاني 🚚', 'Gratuit 🚚')}
-                </span>
+                {isFreeShipping ? (
+                  <span className="text-green-700 font-bold">
+                    {t('مجاني 🚚', 'Gratuit 🚚')}
+                  </span>
+                ) : (
+                  <span className="font-bold text-[#123D35]">
+                    {formatPrice(shippingFeeMAD)}
+                  </span>
+                )}
               </div>
               <div className="pt-2 border-t border-[#2D3533]/15 flex justify-between text-base font-bold text-[#123D35]">
                 <span>{t('المجموع الصافي للدفع', 'Total à régler')}</span>

@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CartItem, Product, ProductVariant } from '../types';
+import { SHIPPING_CONFIG } from '../data/content';
 
 interface CartContextType {
   items: CartItem[];
@@ -11,6 +12,7 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   subtotalMAD: number;
+  shippingFeeMAD: number;
   freeShippingThresholdMAD: number;
   freeShippingProgress: number;
   isFreeShipping: boolean;
@@ -81,7 +83,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
       return [...prev, { product, quantity, selectedVariant: activeVariant }];
     });
-    setIsCartOpen(true);
   };
 
   const removeItem = (productId: string, variantId?: number) => {
@@ -121,8 +122,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return acc + unitPrice * item.quantity;
   }, 0);
 
-  const freeShippingProgress = 100;
-  const isFreeShipping = true;
+  const freeShippingThresholdMAD = SHIPPING_CONFIG.freeShippingThresholdMAD;
+  const isFreeShipping = items.length > 0 && subtotalMAD >= freeShippingThresholdMAD;
+  const standardShippingFeeMAD = SHIPPING_CONFIG.standardShippingFeeMAD;
+  const shippingFeeMAD = items.length === 0 || isFreeShipping ? 0 : standardShippingFeeMAD;
+  const freeShippingProgress =
+    items.length === 0
+      ? 0
+      : Math.min(100, Math.round((subtotalMAD / freeShippingThresholdMAD) * 100));
 
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
@@ -156,7 +163,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         totalItems,
         subtotalMAD,
-        freeShippingThresholdMAD: 0,
+        shippingFeeMAD,
+        freeShippingThresholdMAD,
         freeShippingProgress,
         isFreeShipping,
         isCartOpen,
