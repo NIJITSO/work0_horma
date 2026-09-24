@@ -6,8 +6,8 @@ import { Lock, Mail, Eye, EyeOff, ShieldCheck, ArrowRight, Sparkles } from 'luci
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@alhurra.ma');
-  const [password, setPassword] = useState('admin123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -79,9 +79,10 @@ export default function AdminLoginPage() {
               <input
                 type="email"
                 required
+                autoComplete="username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@alhurra.ma"
+                placeholder="votre.email@domaine.com"
                 className="w-full bg-[#0B2520]/80 border border-[#C89748]/20 rounded-xl pl-10 pr-4 py-3 text-sm text-[#FAF7F2] placeholder-[#FAF7F2]/30 focus:outline-none focus:border-[#C89748] transition-colors"
               />
             </div>
@@ -99,6 +100,7 @@ export default function AdminLoginPage() {
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
