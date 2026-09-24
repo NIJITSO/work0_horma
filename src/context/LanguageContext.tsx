@@ -13,13 +13,39 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+function getCookie(name: string): string | null {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+  return match ? decodeURIComponent(match[3]) : null;
+}
+
+function setCookie(name: string, value: string, days: number = 365) {
+  if (typeof document === 'undefined') return;
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('ar');
+  // French is now the default
+  const [language, setLanguageState] = useState<Language>('fr');
 
   useEffect(() => {
-    const saved = (localStorage.getItem('al_hurra_lang') || localStorage.getItem('zayna_lang')) as Language;
-    if (saved && (saved === 'ar' || saved === 'fr')) {
+    // 1. Check cookies first
+    const cookieLang = getCookie('alhurra_lang') as Language;
+    if (cookieLang === 'ar' || cookieLang === 'fr') {
+      setLanguageState(cookieLang);
+      return;
+    }
+
+    // 2. Check localStorage as fallback
+    const saved = localStorage.getItem('alhurra_lang') as Language;
+    if (saved === 'ar' || saved === 'fr') {
       setLanguageState(saved);
+      setCookie('alhurra_lang', saved);
+    } else {
+      // Default to French and store preference
+      setCookie('alhurra_lang', 'fr');
+      localStorage.setItem('alhurra_lang', 'fr');
     }
   }, []);
 
@@ -27,11 +53,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const dir = language === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.dir = dir;
     document.documentElement.lang = language;
-    localStorage.setItem('al_hurra_lang', language);
+    setCookie('alhurra_lang', language);
+    localStorage.setItem('alhurra_lang', language);
   }, [language]);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
+    setCookie('alhurra_lang', lang);
+    localStorage.setItem('alhurra_lang', lang);
   };
 
   const dir = language === 'ar' ? 'rtl' : 'ltr';
