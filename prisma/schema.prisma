@@ -150,3 +150,15 @@ model OrderItem {
 
   @@map("order_items")
 }
+
+model AdminUser {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String   // Salted PBKDF2 hash
+  role      String   @default("admin")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("admin_users")
+}

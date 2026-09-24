@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '../../context/LanguageContext';
-import { Mail, Phone, MapPin, ShieldCheck, Heart } from 'lucide-react';
+import { Mail, Phone, MapPin, ShieldCheck, Heart, Lock } from 'lucide-react';
 import { BRAND } from '../../data/content';
 
 function InstagramIcon({ className = 'w-4 h-4' }: { className?: string }) {
@@ -193,7 +193,13 @@ export function Footer() {
           </div>
 
           <div className="text-xs text-[#FFFCF7]/50 text-center sm:text-end">
-            <p>{t('© 2026 AL HURRA. جميع الحقوق محفوظة.', '© 2026 AL HURRA. Tous droits réservés.')}</p>
+            <p>
+              {t('© 2026 AL HURRA. جميع الحقوق محفوظة.', '© 2026 AL HURRA. Tous droits réservés.')}
+              <Link href="/admin" className="ms-3 text-[#C89748]/60 hover:text-[#C89748] transition-colors inline-flex items-center gap-1 text-[11px]" title="Espace Administrateur">
+                <Lock className="w-3 h-3" />
+                <span>{t('الإدارة', 'Admin')}</span>
+              </Link>
+            </p>
             <p className="text-[10px] text-[#FFFCF7]/30 mt-1">
               {t('مستحضرات تجميل طبيعية معتمدة • صنع في المغرب', 'Cosmétiques naturels certifiés • Made in Morocco')}
             </p>
